@@ -2,7 +2,6 @@
 namespace App\Http\Requests\Auth;
 
 use App\Http\Requests\BaseRequest;
-use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterRequest extends BaseRequest
 {
@@ -21,9 +20,16 @@ class RegisterRequest extends BaseRequest
     }
 
     // 错误消息自定义
-    public function message () {
-        /* return [
-            'name.required' => '用户名不能为空'
-        ]; */
+    public function messages () {
+        return [
+            'name.required' => '用户名不能为空',
+            'email.email' => '邮箱格式不正确',
+            'password.required' => '密码不能为空',
+            'password.min' => '密码应不少于6位',
+            'password.max' => '密码应不大于16位',
+            'password.confirmed' => '两次密码不一致',
+            'email.unique' => '邮箱已经被注册过了',
+            'name.max' => '用户名不应超过16位'
+        ];
     }
 }

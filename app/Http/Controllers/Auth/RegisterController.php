@@ -6,6 +6,7 @@ use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Requests\Auth\RegisterRequest;
+use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends BaseController
 {
@@ -18,6 +19,9 @@ class RegisterController extends BaseController
         $user->email = $request->input('email');
         $user->password = bcrypt($request->input('passwrod'));
         $user->save();
-        return $this->response->created();
+        return $this->response->array([
+            'status_code' => 200,
+            'msg' => '注册成功'
+        ]);
     }
 }
