@@ -23,5 +23,9 @@ $api->version('v1', function ($api) use($params) {
         $api->resource('users', \App\Http\Controllers\Admin\UserController::class, [
             'only' => ['index', 'show']
         ]);
+        // 分类管理资源路由
+        $api->resource('category', \App\Http\Controllers\Admin\CategoryController::class, [
+            'except' => ['destroy']
+        ]);
     });
 });
