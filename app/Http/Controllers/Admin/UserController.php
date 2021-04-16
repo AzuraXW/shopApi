@@ -28,8 +28,8 @@ class UserController extends BaseController
             return $query->where('email', 'like', "%$email%");
         })->paginate($limit)->toArray();
         return $this->response->array([
-            'status_code' => 200,
-            'msg' => '获取成功',
+            'success' => true,
+            'message' => '获取成功',
             'data' => $paginate['data'],
             'total' => $paginate['total'],
             'current_page' => $paginate['current_page'],
@@ -42,8 +42,8 @@ class UserController extends BaseController
         $user->is_locked = $user->is_locked === 0 ? 1 : 0;
         $user->save();
         return $this->response->array([
-            'status_code' => 200,
-            'msg' => '用户状态更新成功',
+            'success' => 200,
+            'message' => '用户状态更新成功',
             'is_lock' => $user->is_locked
         ]);
     }

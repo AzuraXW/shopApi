@@ -18,21 +18,21 @@ class LoginController extends BaseController
         // dd(bcrypt($request->input('password')));
         if (!$token = auth('api')->attempt($credentials)) {
             return $this->response->array([
-                'status_code' => 401,
-                'msg' => '登录失败'
+                'success' => false,
+                'message' => '登录失败'
             ])->setStatusCode(401);
         }
         // 被禁用的用户不能登录
         if (auth('api')->user()->is_locked === 1) {
             return $this->response->array([
-                'status_code' => 403,
-                'msg' => '该用户已被禁用'
+                'success' => false,
+                'message' => '该用户已被禁用'
             ])->setStatusCode(403);
         }
         // 登录成功
         return $this->responseWithToken($token, [
-            'status_code' => 200,
-            'msg' => '登录成功'
+            'success' => true,
+            'message' => '登录成功'
         ]);
     }
 
@@ -53,8 +53,8 @@ class LoginController extends BaseController
         auth('api')->logout();
 
         return $this->response->array([
-            'code' => 200,
-            'msg' => '成功退出登录'
+            'success' => true,
+            'message' => '成功退出登录'
         ]);
     }
 
@@ -62,8 +62,8 @@ class LoginController extends BaseController
     public function refresh()
     {
         return $this->responseWithToken(auth('api')->refresh(), [
-            'code' => 200,
-            'msg' => 'token刷新成功'
+            'success' => true,
+            'message' => 'token刷新成功'
         ]);
     }
 

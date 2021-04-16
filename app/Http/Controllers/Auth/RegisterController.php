@@ -20,8 +20,8 @@ class RegisterController extends BaseController
         $user->password = bcrypt($request->input('passwrod'));
         $user->save();
         return $this->response->array([
-            'status_code' => 200,
-            'msg' => '注册成功'
+            'success' => true,
+            'message' => '注册成功'
         ]);
     }
 }

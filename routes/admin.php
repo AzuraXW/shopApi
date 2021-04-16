@@ -24,6 +24,7 @@ $api->version('v1', function ($api) use($params) {
             'only' => ['index', 'show']
         ]);
         // 分类管理资源路由
+        $api->patch('category/{category}/status', [\App\Http\Controllers\Admin\CategoryController::class, 'status']);
         $api->resource('category', \App\Http\Controllers\Admin\CategoryController::class, [
             'except' => ['destroy']
         ]);

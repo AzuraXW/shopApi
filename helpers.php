@@ -42,3 +42,10 @@ if (!function_exists('forget_cache_category')) {
         cache()->forget('cache_category_all');
     }
 }
+
+if (! function_exists('error')) {
+    function error($message, $code = -1)
+    {
+        throw new \App\Exceptions\ApiException($message, $code);
+    }
+}
