@@ -9,6 +9,8 @@ $api->version('v1', function ($api) {
        $api->group(['middleware' => 'api.auth'], function ($api) {
            $api->post('logout', "App\Http\Controllers\Auth\LoginController@logout");
            $api->post('refresh', "App\Http\Controllers\Auth\LoginController@refresh");
+           // 阿里云OSS上传token
+           $api->get('oss/token', [App\Http\Controllers\Auth\OssController::class, 'token']);
        });
        $api->post('me', "App\Http\Controllers\Auth\LoginController@me");
    });

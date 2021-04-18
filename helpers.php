@@ -49,3 +49,9 @@ if (! function_exists('error')) {
         throw new \App\Exceptions\ApiException($message, $code);
     }
 }
+
+if (!function_exists('oss_url')) {
+    function oss_url ($key) {
+        return config('filesystems')['disks']['oss']['bucket_url'] . '/' . $key;
+    }
+}
