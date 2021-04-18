@@ -26,14 +26,10 @@ class UserController extends BaseController
             return $query->where('name', 'like', "%$name%");
         })->when($email, function ($query) use($email) {
             return $query->where('email', 'like', "%$email%");
-        })->paginate($limit)->toArray();
-        return $this->response->array([
+        })->paginate($limit);
+        return $this->response->paginator($paginate, new UserTransformer())->setMeta([
             'success' => true,
-            'message' => '获取成功',
-            'data' => $paginate['data'],
-            'total' => $paginate['total'],
-            'current_page' => $paginate['current_page'],
-            'last_page' => $paginate['last_page']
+            'message' => '成功获取用户列表'
         ]);
     }
 

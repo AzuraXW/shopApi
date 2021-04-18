@@ -126,6 +126,9 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/overtrue/laravel-lang" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/caouecs/laravel-lang" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/liyu/dingo-serializer-switch" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/iidestiny/flysystem-oss" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/iidestiny/laravel-filesystem-oss" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/aliyuncs/oss-sdk-php" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
