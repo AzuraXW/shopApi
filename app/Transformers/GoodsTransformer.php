@@ -7,7 +7,7 @@ use App\Models\Goods;
 use League\Fractal\TransformerAbstract;
 
 class GoodsTransformer extends TransformerAbstract {
-    protected $availableIncludes = ['category', 'user'];
+    protected $availableIncludes = ['category', 'user', 'comment'];
     public function transform(Goods $goods) {
         $pics_url = [];
         foreach ($goods->pics as $pic) {
@@ -15,6 +15,7 @@ class GoodsTransformer extends TransformerAbstract {
         }
 
         return [
+            'id' => $goods->id,
             'category_id' => $goods->category_id,
             'description' => $goods->description,
             'price' => $goods->price,
@@ -35,5 +36,8 @@ class GoodsTransformer extends TransformerAbstract {
     }
     public function includeUser (Goods $good) {
         return $this->item($good->user, new UserTransformer());
+    }
+    public function includeComment (Goods $good) {
+        return $this->collection($good->comment, new CommentTransformer());
     }
 }

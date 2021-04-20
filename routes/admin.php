@@ -42,5 +42,12 @@ $api->version('v1', function ($api) use($params) {
         $api->resource('goods', \App\Http\Controllers\Admin\GoodsController::class, [
             'except' => ['destroy']
         ]);
+
+        /**
+        评论管理
+         */
+        $api->get('comments', [\App\Http\Controllers\Admin\CommentController::class, 'index']);
+        $api->get('comments/{comment}', [\App\Http\Controllers\Admin\CommentController::class, 'show']);
+        $api->patch('comments/{comment}/reply', [\App\Http\Controllers\Admin\CommentController::class, 'reply']);
     });
 });
