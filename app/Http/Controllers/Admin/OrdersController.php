@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BaseController;
+use App\Mail\OrderPost;
 use App\Models\Orders;
 use App\Transformers\OrdersTransformer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class OrdersController extends BaseController
 {
@@ -58,10 +60,17 @@ class OrdersController extends BaseController
             ])->setStatusCode(422);
         }
 
-        $orders->express_type = $express_type;
-        $orders->express_no = $express_no;
-        $orders->status = 3;
-        $orders->save();
+//        $orders->express_type = $express_type;
+//        $orders->express_no = $express_no;
+//        $orders->status = 3;
+//        $orders->save();
+//
+//        Mail::to($orders->user)->queue(new OrderPost($orders));
+        \App\Events\OrderPost::dispatch(
+            $orders,
+            $express_no,
+            $express_type
+        );
         return $this->response->array([
             'success' => true,
             'message' => '发货成功'
