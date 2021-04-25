@@ -56,5 +56,12 @@ $api->version('v1', function ($api) use($params) {
         $api->get('orders', [\App\Http\Controllers\Admin\OrdersController::class, 'index']);
         $api->get('orders/{orders}', [\App\Http\Controllers\Admin\OrdersController::class, 'show']);
         $api->patch('orders/{orders}/post', [\App\Http\Controllers\Admin\OrdersController::class, 'post']);
+
+        $api->resource('slides', \App\Http\Controllers\Admin\SlidesController::class, [
+            'except' => ['destroy']
+        ]);
+        $api->patch('slides/{slide}/status', [\App\Http\Controllers\Admin\SlidesController::class, 'status']);
+
+        $api->get('menus', [\App\Http\Controllers\Admin\MenuController::class, 'index']);
     });
 });

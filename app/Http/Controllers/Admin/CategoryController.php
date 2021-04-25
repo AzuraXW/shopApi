@@ -44,7 +44,7 @@ class CategoryController extends BaseController
         if (!is_array($insertData)) return $insertData;
         if (count($equally->toArray()) > 0) {
             return $this->response->array([
-                'success' => 422,
+                'success' => false,
                 'message' => '同一分类层级下已经存在该分类'
             ])->setStatusCode(422);
         }
@@ -112,6 +112,7 @@ class CategoryController extends BaseController
     private function checkInput ($request) {
         $name = $request->input('name');
         $pid = $request->input('pid', 0);
+        $group = $request->input('group', 'goods');
         // 名称不能为空
         if (!$name) {
             return $this->response->array([
@@ -131,7 +132,8 @@ class CategoryController extends BaseController
         return [
             'name' => $name,
             'pid' => $pid,
-            'level' => $level
+            'level' => $level,
+            'group' => $group
         ];
     }
 }
