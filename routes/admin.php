@@ -5,7 +5,7 @@ $api = app('Dingo\Api\Routing\Router');
 $params = [
     'middleware' => [
         'api.auth',
-        'check.permission',
+//        'check.permission',
         // 减少transform的包裹层
         'serializer:array',
         'bindings'
@@ -24,6 +24,7 @@ $api->version('v1', function ($api) use($params) {
         $api->resource('users', \App\Http\Controllers\Admin\UserController::class, [
             'only' => ['index', 'show']
         ]);
+        $api->post('users/{user}/role', [\App\Http\Controllers\Admin\UserController::class, 'role'])->name('users.role');
         /**
         分类管理
          */
@@ -64,5 +65,19 @@ $api->version('v1', function ($api) use($params) {
         $api->patch('slides/{slide}/status', [\App\Http\Controllers\Admin\SlidesController::class, 'status'])->name('slides.status');
 
         $api->get('menus', [\App\Http\Controllers\Admin\MenuController::class, 'index'])->name('menus.index');
+
+        /**
+        角色权限分配
+         */
+        // 返回所有的权限
+        $api->get('permissions', [\App\Http\Controllers\Admin\PermissionController::class, 'index'])->name('permissions.index');
+        // 返回角色以及对应的权限
+        $api->get('roles', [\App\Http\Controllers\Admin\RolesController::class, 'index'])->name('roles.index');
+        // 返回所有的角色
+        $api->get('roles/list', [\App\Http\Controllers\Admin\RolesController::class, 'list'])->name('roles.list');
+        // 添加角色
+        $api->post('roles', [\App\Http\Controllers\Admin\RolesController::class, 'store'])->name('roles.store');
+        // 为角色添加权限
+        $api->post('roles/{role}/permission', [\App\Http\Controllers\Admin\RolesController::class, 'addPermission'])->name('roles.addPermission');
     });
 });

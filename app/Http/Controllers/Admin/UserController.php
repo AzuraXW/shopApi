@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Transformers\UserTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class UserController extends BaseController
 {
@@ -79,14 +80,23 @@ class UserController extends BaseController
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+    // 为用户分配角色
+    public function role (Request $request, User $user) {
+        $roleIds = $request->input('roleids');
+        $isMatched = preg_match('/^\d(,\d+)*$/', $roleIds);
+        if (!$isMatched) {
+            return $this->response->array([
+                'success' => false,
+                'message' => '角色ID不符合格式'
+            ])->setStatusCode(422);
+        }
+        $roleArray = explode(',', $roleIds);
+        $roleNames = Role::whereIn('id', $roleArray)->pluck('name');
+        $user->assignRole($roleNames);
+        return $this->response->array([
+            'success' => true,
+            'message' => '成功分配角色',
+            'rolename' => $roleNames
+        ]);
     }
 }
