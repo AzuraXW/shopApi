@@ -129,6 +129,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/iidestiny/flysystem-oss" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/iidestiny/laravel-filesystem-oss" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/aliyuncs/oss-sdk-php" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/spatie/laravel-permission" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
