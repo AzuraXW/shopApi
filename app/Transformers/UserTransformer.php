@@ -12,6 +12,7 @@ class UserTransformer extends TransformerAbstract {
             'name' => $user->name,
             'email' => $user->email,
             'is_locked' => $user->is_locked,
+            'is_admin' => $user->is_admin,
             'created_at' => $user->created_at,
             'updated_at' => $user->updated_at
         ];

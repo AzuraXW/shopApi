@@ -3,23 +3,20 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\BaseController;
+use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class LoginController extends BaseController
 {
-    // 用户登录
-    public function login (Request $request) {
-        $request->validate([
-            'email' => 'required',
-            'password' => 'required'
-        ]);
+    // 后台用户登录
+    public function login (LoginRequest $request) {
         $credentials = request(['email', 'password']);
         // dd(bcrypt($request->input('password')));
         if (!$token = auth('api')->attempt($credentials)) {
             return $this->response->array([
                 'success' => false,
-                'message' => '登录失败'
+                'message' => '用户名或密码错误'
             ])->setStatusCode(401);
         }
         // 被禁用的用户不能登录
@@ -27,6 +24,13 @@ class LoginController extends BaseController
             return $this->response->array([
                 'success' => false,
                 'message' => '该用户已被禁用'
+            ])->setStatusCode(403);
+        }
+        // 这是后台用户登录，不是管理员不给登录
+        if (auth('api')->user()->is_admin === 0) {
+            return $this->response->array([
+                'success' => false,
+                'message' => '您不是管理员'
             ])->setStatusCode(403);
         }
         // 登录成功
@@ -70,6 +74,7 @@ class LoginController extends BaseController
     // 返回当前用户信息
     public function me()
     {
+//        dd(auth('api')->user());
         return response()->json(auth('api')->user());
     }
 }

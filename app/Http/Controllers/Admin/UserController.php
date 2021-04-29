@@ -22,8 +22,11 @@ class UserController extends BaseController
         $limit = $request->query('limit');
         $name = $request->query('name');
         $email = $request->query('email');
+        $is_admin = $request->query('is_admin');
         // 分页查询
-        $paginate = User::when($name, function ($query) use($name) {
+        $paginate = User::when($is_admin != '', function ($query) use ($is_admin) {
+            return $query->where('is_admin', $is_admin);
+        })->when($name, function ($query) use($name) {
             return $query->where('name', 'like', "%$name%");
         })->when($email, function ($query) use($email) {
             return $query->where('email', 'like', "%$email%");
@@ -84,6 +87,13 @@ class UserController extends BaseController
     public function role (Request $request, User $user) {
         $roleIds = $request->input('roleids');
         $isMatched = preg_match('/^\d(,\d+)*$/', $roleIds);
+        // 判断用户是否是管理员
+        if (!$user->is_admin) {
+            return $this->response->array([
+                'success' => false,
+                'message' => '该用户不是管理员'
+            ])->setStatusCode(403);
+        }
         if (!$isMatched) {
             return $this->response->array([
                 'success' => false,

@@ -5,6 +5,7 @@ $api = app('Dingo\Api\Routing\Router');
 $params = [
     'middleware' => [
         'api.auth',
+        'check.admin',
 //        'check.permission',
         // 减少transform的包裹层
         'serializer:array',

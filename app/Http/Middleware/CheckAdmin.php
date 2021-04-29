@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class CheckPermission
+class CheckAdmin
 {
     /**
      * Handle an incoming request.
@@ -16,12 +16,10 @@ class CheckPermission
      */
     public function handle(Request $request, Closure $next)
     {
-        // 验证用户是否具有请求权限
-        $user = auth('api')->user();
-        if (!$user->can($request->route()->getName())) {
+        if (auth('api')->user()->is_admin === 0) {
             return response([
                 'success' => false,
-                'message' => '您没有权限操作'
+                'message' => '您不是管理员'
             ])->setStatusCode(403);
         }
         return $next($request);
