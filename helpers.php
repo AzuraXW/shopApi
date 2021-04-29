@@ -74,6 +74,13 @@ if (! function_exists('error')) {
 
 if (!function_exists('oss_url')) {
     function oss_url ($key) {
+        if (empty($key)) return  '';
+
+        if (strpos($key, 'http://') !== false
+            || strpos($key, 'https://') !== false
+            || strpos($key, 'data:image')) {
+            return $key;
+        }
         return config('filesystems')['disks']['oss']['bucket_url'] . '/' . $key;
     }
 }

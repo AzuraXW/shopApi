@@ -13,6 +13,11 @@ class Goods extends Model
         'pics' => 'array'
     ];
 
+    protected $appends = ['cover_url'];
+    public function getCoverUrlAttribute () {
+        return oss_url($this->cover);
+    }
+
     public function category () {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
