@@ -63,8 +63,14 @@ class UserController extends BaseController
                 'message' => '旧密码不正确'
             ])->setStatusCode(502);
         }
-
-        $user->password = bcrypt($request->input('password'));
+        $password = $request->input('password');
+        if ($password === $old_password) {
+            return $this->response->array([
+                'success' => false,
+                'message' => '新密码不能和旧密码相同'
+            ])->setStatusCode(502);
+        }
+        $user->password = bcrypt($password);
         $user->save();
         auth('api')->logout();
         return $this->response->array([
