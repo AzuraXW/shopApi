@@ -12,5 +12,9 @@ $api->version('v1', function ($api) {
     $api->group(['middleware' => ['api.auth', 'bindings']], function ($api) {
         $api->get('user/info', [\App\Http\Controllers\Api\UserController::class, 'show']);
         $api->put('user/password', [\App\Http\Controllers\Api\UserController::class, 'updatePwd']);
+
+        // 邮箱相关api
+        $api->post('email/code', [\App\Http\Controllers\Api\BindController::class, 'emailCode']);
+        $api->post('email/update', [\App\Http\Controllers\Api\BindController::class, 'updateEmail']);
     });
 });
