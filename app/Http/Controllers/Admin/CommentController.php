@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BaseController;
-use App\Models\Comment;
+use App\Models\Comments;
 use App\Models\Goods;
 use App\Transformers\CommentTransformer;
 use Illuminate\Http\Request;
@@ -20,7 +20,7 @@ class CommentController extends BaseController
         $rate = $request->query('rate');
         $goods_title = $request->query('goods_title');
         $limit = $request->query('limit');
-        $comments = Comment::when($rate, function ($query) use ($rate) {
+        $comments = Comments::when($rate, function ($query) use ($rate) {
             return $query->where('rate', $rate);
         })->when($goods_title, function ($query) use ($goods_title) {
             $goods_ids = Goods::where('title', 'like', "%$goods_title%")->pluck('id');
@@ -38,7 +38,7 @@ class CommentController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Comment $comment)
+    public function show(Comments $comment)
     {
         return $this->response->item($comment, new CommentTransformer())->setMeta([
             'success' => true,
@@ -47,7 +47,7 @@ class CommentController extends BaseController
     }
 
     // 商家回复
-    public function reply(Request $request, Comment $comment)
+    public function reply(Request $request, Comments $comment)
     {
         $reply = $request->input('reply');
         if ($reply == '' || strlen($reply) > 255) {

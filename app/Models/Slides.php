@@ -9,4 +9,9 @@ class Slides extends Model
 {
     use HasFactory;
     protected $fillable = ['title', 'img', 'url', 'status', 'seq'];
+    protected $appends = ['img_url'];
+
+    public function getImgUrlAttribute () {
+        return oss_url($this->img);
+    }
 }
