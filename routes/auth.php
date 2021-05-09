@@ -13,5 +13,13 @@ $api->version('v1', function ($api) {
            $api->get('oss/token', [App\Http\Controllers\Auth\OssController::class, 'token']);
        });
        $api->post('me', "App\Http\Controllers\Auth\LoginController@me");
+
+       // 邮箱相关api
+       $api->post('email/code', [\App\Http\Controllers\Auth\BindController::class, 'emailCode']);
+       $api->post('email/update', [\App\Http\Controllers\Auth\BindController::class, 'updateEmail']);
+
+       // 绑定手机号
+       $api->post('phone/code', [\App\Http\Controllers\Auth\BindController::class, 'phoneCode']);
+       $api->post('phone/update', [\App\Http\Controllers\Auth\BindController::class, 'phone']);
    });
 });

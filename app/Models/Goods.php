@@ -18,6 +18,13 @@ class Goods extends Model
         return oss_url($this->cover);
     }
 
+    public function getPicsUrlAttribute () {
+        // 使用集合处理每一项元素
+        return collect($this->pics)->map(function ($item) {
+           return oss_url($item);
+        });
+    }
+
     public function category () {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
@@ -26,7 +33,7 @@ class Goods extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function comment () {
-        return $this->hasMany(Comment::class, 'goods_id', 'id');
+    public function comments () {
+        return $this->hasMany(Comments::class, 'goods_id', 'id');
     }
 }

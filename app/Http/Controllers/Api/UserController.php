@@ -79,6 +79,25 @@ class UserController extends BaseController
         ]);
     }
 
+    // 更换用户头像
+    public function updateAvatar (Request $request) {
+        $avatar = $request->input('avatar');
+        if (!$avatar) {
+            return $this->response->array([
+               'success' => false,
+               'message' => '缺少头像url地址'
+            ])->setStatusCode(422);
+        }
+
+        $user = auth('api')->user();
+        $user->avatar = $avatar;
+        $user->save();
+        return $this->response->array([
+            'success' => true,
+            'message' => '头像更换成功'
+        ]);
+    }
+
     // 格式化 成功登录后的响应
     protected function responseWithToken($token, $additionalRes) {
         $response = array_merge([

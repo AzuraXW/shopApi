@@ -15,6 +15,7 @@ class User extends Authenticatable implements JWTSubject
     use HasRoles;
 
     protected $guard_name = 'api';
+    protected $appends = ['avatar_url'];
 
     /**
      * The attributes that are mass assignable.
@@ -64,5 +65,9 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function getAvatarUrlAttribute () {
+        return oss_url($this->avatar);
     }
 }
