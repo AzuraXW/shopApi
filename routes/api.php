@@ -22,5 +22,12 @@ $api->version('v1', function ($api) {
         $api->resource('cart', \App\Http\Controllers\Api\CartController::class, [
             'except' => ['show']
         ]);
+
+        /**
+         * 订单相关api
+         */
+        // 订单预览
+        $api->get('orders/preview', [\App\Http\Controllers\Api\OrderController::class, 'preview']);
+        $api->post('orders', [\App\Http\Controllers\Api\OrderController::class, 'store']);
     });
 });
