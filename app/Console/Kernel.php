@@ -2,8 +2,10 @@
 
 namespace App\Console;
 
+use App\Models\Orders;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\DB;
 
 class Kernel extends ConsoleKernel
 {
@@ -25,6 +27,34 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        // 作废超时未支付订单
+        $schedule->call(function () {
+            // 超时订单
+            $orders = Orders::where('status', 1)
+                ->where('created_at', '<', date('Y-m-d H:i:s', time() - 600))
+                ->with('orderDetails.goods')
+                ->get();
+
+            // 循环订单，修改订单状态,还原商品库存
+            try {
+                DB::beginTransaction();
+
+                foreach ($orders as $order) {
+                    $order->status = 5;
+                    $order->save();
+
+                    //还原商品库存
+                    foreach ($order->orderDetails as $details) {
+                        $details->goods->increment('stock', $details->num);
+                    }
+                }
+
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                info($e);
+            }
+        })->everyMinute();
     }
 
     /**

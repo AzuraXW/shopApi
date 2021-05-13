@@ -5,13 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OrderDetails extends Model
+class Cart extends Model
 {
     use HasFactory;
-
-    protected $fillable = ['order_id', 'goods_id', 'price', 'num'];
+    protected $fillable = ['user_id', 'goods_id'];
 
     public function goods () {
-        return $this->belongsTo(Goods::class, 'goods_id', 'id');
+        return $this->belongsTo('App\Models\Goods', 'goods_id', 'id');
     }
 }
