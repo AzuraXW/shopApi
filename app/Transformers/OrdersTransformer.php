@@ -9,7 +9,7 @@ use App\Models\User;
 use League\Fractal\TransformerAbstract;
 
 class OrdersTransformer extends TransformerAbstract {
-    public $availableIncludes = ['user', 'orderDetails'];
+    public $availableIncludes = ['user', 'orderDetails', 'goods'];
     public function transform(Orders $orders) {
         return [
             'id' => $orders->id,
@@ -32,5 +32,9 @@ class OrdersTransformer extends TransformerAbstract {
 
     public function includeorderDetails (Orders $orders) {
         return $this->collection($orders->orderDetails, new OrderDetailsTransformer());
+    }
+
+    public function includeGoods (Orders $orders) {
+        return $this->collection($orders->goods, new GoodsTransformer());
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\BaseController;
 use App\Models\Cart;
 use App\Models\Goods;
 use App\Models\Orders;
+use App\Transformers\OrdersTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -116,5 +117,9 @@ class OrderController extends BaseController
             DB::rollBack();
             return $e;
         }
+    }
+
+    public function show (Orders $orders) {
+        return $this->response->item($orders, new OrdersTransformer());
     }
 }
