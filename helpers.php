@@ -1,5 +1,6 @@
 <?php
 use App\Models\Category;
+use App\Models\Chain;
 if (!function_exists('categoryTree')) {
     function categoryTree ($group = 'goods', $status = false) {
         $categories = Category::when($status !== false, function ($query) use ($status) {
@@ -82,5 +83,14 @@ if (!function_exists('oss_url')) {
             return $key;
         }
         return config('filesystems')['disks']['oss']['bucket_url'] . '/' . $key;
+    }
+}
+
+// 缓存所有的省份
+if (!function_exists('region_cache')) {
+    function province ($pid) {
+        return cache()->rememberForever('region_cache' . $pid, function () use ($pid) {
+            return Chain::where('pid', $pid)->get();
+        });
     }
 }
