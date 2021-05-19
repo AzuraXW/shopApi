@@ -6,22 +6,38 @@ use App\Http\Controllers\BaseController;
 use App\Models\Cart;
 use App\Models\Goods;
 use App\Models\Orders;
+use App\Models\Address;
+use App\Transformers\OrdersTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Facades\Express\Facade\Express;
 
 class OrderController extends BaseController
 {
+    // 订单列表
+    public function index (Request $request) {
+        $status = $request->input('status');
+        $title = $request->input('title');
+
+        $orders = Orders::where('user_id', auth('api')->id())
+            ->when($status, function ($query) use ($status) {
+                return $query->where('status', $status);
+            })
+            ->when($title, function ($query) use ($title) {
+                return $query->whereHas('goods', function ($query) use ($title) {
+                    return $query->where('title', 'like', "%{$title}%");
+                });
+            })
+            ->paginate(5);
+        return $this->response->paginator($orders, new OrdersTransformer);
+    }
+
     // 购物车预览Api
     public function preview () {
-        // TODO 先写个假地址列表
-        $address = [
-            [
-                'name' => 'Tom',
-                'address' => '广东省东莞市XXXX',
-                'phone' => '1345679'
-            ]
-        ];
         $user = auth('api')->user();
+        // 用户地址信息
+        $addresses = Address::where('user_id', $user->id)->get();
+
         $orders = Cart::where('user_id', $user->id)
             ->where('is_checked', 1)
             ->with('goods:id,title,cover')
@@ -30,22 +46,30 @@ class OrderController extends BaseController
         return $this->response->array([
             'success' => true,
             'message' => '数据获取成功',
-            'address' => $address,
+            'addresses' => $addresses,
             'orders' => $orders
         ]);
     }
 
     // 用户创建订单
     public function store (Request $request) {
+        $user = auth('api')->user();
         $address_id = $request->input('address_id');
-        // TODO 这里还需要验证地址是否存在，需要等到有地址表之后再说
-        if ($address_id == '') {
+        // 验证地址是否正确
+        $address = Address::find($address_id);
+        if (empty($address)) {
             return $this->response->array([
                 'success' => false,
-                'message' => '地址不能为空'
+                'message' => '地址不存在'
             ])->setStatusCode(422);
         }
-        $user = auth('api')->user();
+        if ($address->user_id != $user->id) {
+            return $this->response->array([
+                'success' => false,
+                'message' => '地址错误，请重新选择'
+            ])->setStatusCode(400);
+        }
+
         // 随机生成订单编号
         $order_no = date('YmdHis') . rand(1000000000000, 2000000000000);
 
@@ -116,5 +140,47 @@ class OrderController extends BaseController
             DB::rollBack();
             return $e;
         }
+    }
+
+    // 订单详情
+    public function show (Orders $orders) {
+        return $this->response->item($orders, new OrdersTransformer());
+    }
+
+    // 快递查询
+    public function express (Orders $orders) {
+        if (!in_array($orders->status, [3, 4])) {
+            return $this->response->array([
+                'success' => false,
+                'message' => '订单异常'
+            ])->setStatusCode(400);
+        }
+
+        $track = Express::track($orders->express_type, $orders->express_no);
+        if ($track['Success'] == false) {
+            return $this->response->array([
+                'success' => false,
+                'message' => $track['Message']
+            ])->setStatusCode(500);
+        }
+
+        return $this->response->array($track);
+    }
+
+    // 确认收货
+    public function confirm (Orders $orders) {
+        if ($orders->status != 3) {
+            return $this->response->array([
+                'success' => false,
+                'message' => '订单异常'
+            ]);
+        }
+        $orders->status = 4;
+        $orders->save();
+
+        return $this->response->array([
+            'success' => true,
+            'message' => '成功收货'
+        ]);
     }
 }

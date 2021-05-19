@@ -17,7 +17,7 @@ class CreateCommentsTable extends Migration
             $table->id();
             $table->integer('user_id')->comment('评论的用户');
             $table->integer('goods_id')->comment('所属商品');
-            $table->tinyInteger('rate')->comment('评论的级别 1差评 2中评 3差评');
+            $table->tinyInteger('rate')->default(3)->comment('评论的级别 1差评 2中评 3差评');
             $table->string('content')->comment('评论的内容');
             $table->string('reply')->nullable()->comment('商家的回复');
             $table->json('pics')->nullable()->comment('多个评论图');

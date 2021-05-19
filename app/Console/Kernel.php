@@ -31,7 +31,7 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             // 超时订单
             $orders = Orders::where('status', 1)
-                ->where('created_at', '<', date('Y-m-d H:i:s', time() - 600))
+                ->where('created_at', '<', date('Y-m-d H:i:s', time() - 3600))
                 ->with('orderDetails.goods')
                 ->get();
 
