@@ -142,6 +142,7 @@ class OrderController extends BaseController
         }
     }
 
+    // 订单详情
     public function show (Orders $orders) {
         return $this->response->item($orders, new OrdersTransformer());
     }
@@ -166,6 +167,7 @@ class OrderController extends BaseController
         return $this->response->array($track);
     }
 
+    // 确认收货
     public function confirm (Orders $orders) {
         if ($orders->status != 3) {
             return $this->response->array([

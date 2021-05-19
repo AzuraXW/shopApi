@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddStarToComment extends Migration
+class AddOrderIdToComments extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddStarToComment extends Migration
     public function up()
     {
         Schema::table('comments', function (Blueprint $table) {
-            $table->tinyInteger('star')->after('rate')->default(5)->comment('评论星级');
+            $table->string('order_id')->after('goods_id')->comment('所属订单id');
         });
     }
 
@@ -25,7 +25,7 @@ class AddStarToComment extends Migration
      */
     public function down()
     {
-        Schema::table('comment', function (Blueprint $table) {
+        Schema::table('comments', function (Blueprint $table) {
             //
         });
     }

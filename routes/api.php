@@ -43,6 +43,8 @@ $api->version('v1', function ($api) {
         $api->get('orders/{orders}/express', [\App\Http\Controllers\Api\OrderController::class, 'express']);
         // 收货
         $api->patch('orders/{orders}/confirm', [\App\Http\Controllers\Api\OrderController::class, 'confirm']);
+        // 商品评论
+        $api->post('orders/{orders}/comment', [\App\Http\Controllers\Api\CommentController::class, 'store']);
 
         // 省市区
         $api->get('region', [\App\Http\Controllers\Api\RegionController::class, 'show']);
