@@ -75,6 +75,7 @@ class CartController extends BaseController
      */
     public function update(Request $request, Cart $cart)
     {
+        // TODO 商品参数更新
         $num = intval($request->input('num'));
         if ($num <= 0 || $num > 999) {
             return $this->response->array([

@@ -24,7 +24,7 @@ class CreateOrdersTable extends Migration
             $table->string('express_no')->nullable()->comment('快递单号');
             $table->timestamp('pay_time')->nullable()->comment('支付之间');
             $table->string('pay_type')->nullable()->comment('支付类型：支付宝 微信');
-            $table->integer('trade_no')->nullable()->comment('下单的用户');
+            $table->string('trade_no')->nullable()->comment('下单的用户');
             $table->timestamps();
         });
     }

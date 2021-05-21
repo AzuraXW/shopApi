@@ -6,7 +6,7 @@ return [
         'app_id' => env('ALI_APP_ID', ''),
 
         // 支付宝异步通知地址
-        'notify_url' => 'http://715864a227a8.ngrok.io/api/pay/notify/aliyun',
+        'notify_url' => 'https://9cd6b97c08ac.ngrok.io/api/pay/notify/aliyun',
 
         // 支付成功后同步通知地址
         'return_url' => '',

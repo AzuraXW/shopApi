@@ -31,9 +31,8 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             // 超时订单
             $orders = Orders::where('status', 1)
-                ->where('created_at', '<', date('Y-m-d H:i:s', time() - 3600))
-                ->with('orderDetails.goods')
-                ->get();
+                ->where('created_at', '<', date('Y-m-d H:i:s', time() - 1800)) // 30分钟订单有效期
+                ->with('orderDetails.goods');
 
             // 循环订单，修改订单状态,还原商品库存
             try {
@@ -52,7 +51,6 @@ class Kernel extends ConsoleKernel
                 DB::commit();
             } catch (\Exception $e) {
                 DB::rollBack();
-                info($e);
             }
         })->everyMinute();
     }

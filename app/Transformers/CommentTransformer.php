@@ -11,7 +11,7 @@ class CommentTransformer extends TransformerAbstract {
 
     public function transform(Comment $comment) {
         $pics_url = [];
-        if ($comment->pics) {
+        if (is_array($comment->pics)) {
             foreach ($comment->pics as $pic) {
                 array_push($pics_url, oss_url($pic));
             }

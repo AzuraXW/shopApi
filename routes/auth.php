@@ -21,5 +21,9 @@ $api->version('v1', function ($api) {
        // 绑定手机号
        $api->post('phone/code', [\App\Http\Controllers\Auth\BindController::class, 'phoneCode']);
        $api->post('phone/update', [\App\Http\Controllers\Auth\BindController::class, 'phone']);
+
+       // 通过邮箱找回密码
+       $api->post('password/reset/email/code', [\App\Http\Controllers\Auth\PasswordResetController::class, 'emailCode']);
+       $api->post('password/reset/email', [\App\Http\Controllers\Auth\PasswordResetController::class, 'updatePwdByEmail']);
    });
 });

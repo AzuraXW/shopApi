@@ -175,12 +175,24 @@ class OrderController extends BaseController
                 'message' => '订单异常'
             ]);
         }
-        $orders->status = 4;
-        $orders->save();
+        try {
+            DB::beginTransaction();
+            $orders->status = 4;
+            $orders->save();
 
-        return $this->response->array([
-            'success' => true,
-            'message' => '成功收货'
-        ]);
+            $ordersDetail = $orders->orderDetails;
+            foreach ($ordersDetail as $detail) {
+                Goods::where('id', $detail->goods_id)->increment('sales', $detail->num);
+            }
+
+            DB::commit();
+            return $this->response->array([
+                'success' => true,
+                'message' => '成功收货'
+            ]);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+        }
     }
 }
