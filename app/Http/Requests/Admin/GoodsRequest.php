@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Amdin;
+namespace App\Http\Requests\Admin;
 
 use App\Http\Requests\BaseRequest;
 

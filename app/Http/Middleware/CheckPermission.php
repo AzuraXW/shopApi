@@ -17,7 +17,7 @@ class CheckPermission
     public function handle(Request $request, Closure $next)
     {
         // 验证用户是否具有请求权限
-        $user = auth('api')->user();
+        $user = auth('admin')->user();
         if (!$user->can($request->route()->getName())) {
             return response([
                 'success' => false,

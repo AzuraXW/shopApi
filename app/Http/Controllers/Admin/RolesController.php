@@ -23,7 +23,7 @@ class RolesController extends BaseController
     public function store (RolesRequest $request) {
         $name = $request->input('name');
         $cn_name = $request->input('cn_name');
-        $role = Role::create(['name' => $name, 'cn_name' => $cn_name, 'guard_name' => 'api']);
+        $role = Role::create(['name' => $name, 'cn_name' => $cn_name, 'guard_name' => 'admin']);
         if ($role) {
             return $this->response->array([
                 'success' => true,
@@ -40,7 +40,7 @@ class RolesController extends BaseController
     // 为角色添加权限
     public function addPermission (Request $request, Role $role) {
         $permissionIds = $request->input('permissionids');
-        $isMatched = preg_match('/^\d(,\d+)*$/', $permissionIds);
+        $isMatched = preg_match('/^\d+(,\d+)*$/', $permissionIds);
         if (!$isMatched) {
             return $this->response->array([
                 'success' => false,
@@ -54,6 +54,23 @@ class RolesController extends BaseController
         return $this->response->array([
             'success' => true,
             'message' => '成功分配权限'
+        ]);
+    }
+
+    public function revokePermission (Request $request, Role $role) {
+        $permissionIds = $request->input('permissionids');
+        $isMatched = preg_match('/^\d+(,\d+)*$/', $permissionIds);
+        if (!$isMatched) {
+            return $this->response->array([
+                'success' => false,
+                'message' => '权限字符串格式错误'
+            ])->setStatusCode(422);
+        }
+        $permissionArrary = explode(',', $permissionIds);
+        $role->revokePermissionTo(Permission::whereIn('id', $permissionArrary)->get());
+        return $this->response->array([
+            'success' => true,
+            'message' => '成功移除权限'
         ]);
     }
 }

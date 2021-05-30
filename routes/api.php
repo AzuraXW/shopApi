@@ -3,10 +3,9 @@
 $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', function ($api) {
+    $api->post('login', [\App\Http\Controllers\Api\UserController::class, 'login']);
     // 首页数据
     $api->get('index', [\App\Http\Controllers\Api\IndexController::class, 'index']);
-    // 用户登录
-    $api->post('login', [\App\Http\Controllers\Api\UserController::class, 'login']);
     // 商品详情
     $api->get('goods/{id}', [\App\Http\Controllers\Api\GoodsController::class, 'show']);
     $api->get('goods', [\App\Http\Controllers\Api\GoodsController::class, 'list']);
@@ -14,7 +13,10 @@ $api->version('v1', function ($api) {
     $api->any('pay/notify/aliyun', [\App\Http\Controllers\Api\PayController::class, 'notifyAliyun']);
 
     // 需要权限的api
-    $api->group(['middleware' => ['api.auth', 'bindings', 'serializer:array']], function ($api) {
+    $api->group(['middleware' => ['jwt.role:user', 'bindings', 'serializer:array']], function ($api) {
+        $api->post('logout', [\App\Http\Controllers\Api\UserController::class, 'logout']);
+        $api->get('me', [\App\Http\Controllers\Api\UserController::class, 'me']);
+        $api->get('refresh', [\App\Http\Controllers\Api\UserController::class, 'refresh']);
         $api->get('user/info', [\App\Http\Controllers\Api\UserController::class, 'show']);
         $api->put('user/password', [\App\Http\Controllers\Api\UserController::class, 'updatePwd']);
 

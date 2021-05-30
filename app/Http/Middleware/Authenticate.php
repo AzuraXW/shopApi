@@ -14,8 +14,11 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-        if (! $request->expectsJson()) {
-            return route('login');
+        if (!$request->expectsJson()) {
+            return response([
+                'success' => false,
+                'message' => '无效的token'
+            ])->setStatusCode(401);
         }
     }
 }

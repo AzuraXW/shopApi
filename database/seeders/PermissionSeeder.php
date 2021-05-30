@@ -46,11 +46,11 @@ class PermissionSeeder extends Seeder
             ['name' => 'menus.index', 'cn_name' => '菜单列表'],
         ];
         foreach ($permissions as $p) {
-            $arr = array_merge($p, ['guard_name' => 'api']);
+            $arr = array_merge($p, ['guard_name' => 'admin']);
             Permission::create($arr);
         }
         // 添加角色
-        $role = Role::create(['name' => 'super_admin', 'cn_name' => '超级管理员', 'guard_name' => 'api']);
+        $role = Role::create(['name' => 'super_admin', 'cn_name' => '超级管理员', 'guard_name' => 'admin']);
         // 为角色添加权限
         $role->givePermissionTo(Permission::all());
     }

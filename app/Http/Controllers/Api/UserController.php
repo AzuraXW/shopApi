@@ -33,6 +33,32 @@ class UserController extends BaseController
         ]);
     }
 
+    // 用户退出登录
+    public function logout()
+    {
+        auth('api')->logout();
+
+        return $this->response->array([
+            'success' => true,
+            'message' => '成功退出登录'
+        ]);
+    }
+
+    // 刷新token
+    public function refresh()
+    {
+        return $this->responseWithToken(auth('api')->refresh(), [
+            'success' => true,
+            'message' => 'token刷新成功'
+        ]);
+    }
+
+    // 返回当前用户信息
+    public function me()
+    {
+        return response()->json(auth('api')->user());
+    }
+
     // 用户详情
     public function show () {
         $user = auth('api')->user();
