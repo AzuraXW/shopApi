@@ -10,7 +10,9 @@ class RolesTransformer extends TransformerAbstract {
     public function transform(Role $role) {
         return [
             'id' => $role->id,
+            'name' => $role->name,
             'cn_name' => $role->cn_name,
+            'description' => $role->description,
             'permission' => $role->permissions()->select('id', 'cn_name')->get()
         ];
     }

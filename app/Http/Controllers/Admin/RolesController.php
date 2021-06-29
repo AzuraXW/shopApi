@@ -23,11 +23,18 @@ class RolesController extends BaseController
     public function store (RolesRequest $request) {
         $name = $request->input('name');
         $cn_name = $request->input('cn_name');
-        $role = Role::create(['name' => $name, 'cn_name' => $cn_name, 'guard_name' => 'admin']);
+        $description = $request->input('description');
+        $role = Role::create([
+            'name' => $name,
+            'cn_name' => $cn_name,
+            'guard_name' => 'admin',
+            'description' => $description
+        ]);
         if ($role) {
             return $this->response->array([
                 'success' => true,
-                'message' => '成功创建角色'
+                'message' => '成功创建角色',
+                'role_id' => $role->id
             ]);
         }
     }
@@ -57,7 +64,7 @@ class RolesController extends BaseController
         ]);
     }
 
-    public function revokePermission (Request $request, Role $role) {
+    public function updatePermission (Request $request, Role $role) {
         $permissionIds = $request->input('permissionids');
         $isMatched = preg_match('/^\d+(,\d+)*$/', $permissionIds);
         if (!$isMatched) {
@@ -67,10 +74,41 @@ class RolesController extends BaseController
             ])->setStatusCode(422);
         }
         $permissionArrary = explode(',', $permissionIds);
-        $role->revokePermissionTo(Permission::whereIn('id', $permissionArrary)->get());
+        // 先移除角色下所有权限
+        $role->revokePermissionTo($role->permissions()->select('id')->get());
+        // 再赋予前端指定的权限
+        $role->givePermissionTo(Permission::whereIn('id', $permissionArrary)->get());
         return $this->response->array([
             'success' => true,
-            'message' => '成功移除权限'
+            'message' => '成功更新权限'
+        ]);
+    }
+
+    // 更新角色信息
+    public function update (RolesRequest $request, Role $role) {
+        $name = $request->input('name');
+        $cn_name = $request->input('cn_name');
+        $description = $request->input('description');
+        $role->updated([
+            'name' => $name,
+            'cn_name' => $cn_name,
+            'guard_name' => 'admin',
+            'description' => $description
+        ]);
+        if ($role) {
+            return $this->response->array([
+                'success' => true,
+                'message' => '成功更新角色',
+                'role_id' => $role->id
+            ]);
+        }
+    }
+
+    public function delete (Role $role) {
+        $role->delete();
+        return $this->response->array([
+            'success' => true,
+            'message' => '成功删除角色'
         ]);
     }
 }

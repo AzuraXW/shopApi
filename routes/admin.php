@@ -90,9 +90,11 @@ $api->version('v1', function ($api) use($params) {
             $api->get('roles/list', [\App\Http\Controllers\Admin\RolesController::class, 'list'])->name('roles.list');
             // 添加角色
             $api->post('roles', [\App\Http\Controllers\Admin\RolesController::class, 'store'])->name('roles.store');
+            $api->post('roles/{role}/update', [\App\Http\Controllers\Admin\RolesController::class, 'update'])->name('roles.update');
+            $api->delete('roles/{role}/delete', [\App\Http\Controllers\Admin\RolesController::class, 'delete'])->name('roles.delete');
             // 为角色添加权限
             $api->post('roles/{role}/permission', [\App\Http\Controllers\Admin\RolesController::class, 'addPermission'])->name('roles.addPermission');
-            $api->delete('roles/{role}/permission', [\App\Http\Controllers\Admin\RolesController::class, 'revokePermission'])->name('roles.revokePermission');
+            $api->put('roles/{role}/permission', [\App\Http\Controllers\Admin\RolesController::class, 'updatePermission'])->name('roles.updatePermission');
         });
     });
 });

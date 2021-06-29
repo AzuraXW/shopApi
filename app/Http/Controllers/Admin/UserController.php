@@ -21,14 +21,11 @@ class UserController extends BaseController
     {
         $page = $request->query('page');
         $limit = $request->query('limit');
-        $name = $request->query('name');
+        $username = $request->query('username');
         $email = $request->query('email');
-        $is_admin = $request->query('is_admin');
         // 分页查询
-        $paginate = Admin::when($is_admin != '', function ($query) use ($is_admin) {
-            return $query->where('is_admin', $is_admin);
-        })->when($name, function ($query) use($name) {
-            return $query->where('name', 'like', "%$name%");
+        $paginate = Admin::when($username, function ($query) use($username) {
+            return $query->where('username', 'like', "%$username%");
         })->when($email, function ($query) use($email) {
             return $query->where('email', 'like', "%$email%");
         })->paginate($limit);
@@ -54,14 +51,17 @@ class UserController extends BaseController
      */
     public function store(AddUserRequest $request)
     {
-        $admin = new Admin();
-        $admin->username = $request->input('username');
-        $admin->email = $request->input('email');
-        $admin->password = bcrypt($request->input('passwrod'));
-        $admin->save();
+        $username = $request->input('username');
+        $email = $request->input('email');
+        $password = $request->input('passwrod');
+        Admin::create([
+            'username' => $username,
+            'email' => $email,
+            'password' => bcrypt($password)
+        ]);
         return $this->response->array([
             'success' => true,
-            'message' => '成功添加管理员用户'
+            'message' => '成功添加后台用户'
         ]);
     }
 

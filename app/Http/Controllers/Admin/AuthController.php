@@ -25,10 +25,15 @@ class AuthController extends BaseController
     public function me()
     {
         $user = auth('admin')->user();
-        return $user->getAllRoles();
-//        foreach ($roles)
-        return auth('admin')->user()->getAllPermissions();
-        return $this->response->array(auth('admin')->user()->toArray());
+        $roles = $user->getRoleNames();
+//        return auth('admin')->user()->getAllPermissions();
+        return $this->response->array(array_merge(
+            $user->toArray(),
+            [
+                'roles' => $roles,
+                'code' => 20000
+            ]
+        ));
     }
 
     public function logout()
@@ -36,6 +41,7 @@ class AuthController extends BaseController
         auth('admin')->logout();
 
         return $this->response->array([
+            'code' => 20000,
             'success' => true,
             'message' => '成功退出'
         ]);
@@ -55,7 +61,8 @@ class AuthController extends BaseController
         return $this->response->array([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth('admin')->factory()->getTTL() * 60
+            'expires_in' => auth('admin')->factory()->getTTL() * 60,
+            'code' => 20000
         ]);
     }
 }

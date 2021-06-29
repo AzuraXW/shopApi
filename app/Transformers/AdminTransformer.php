@@ -11,6 +11,8 @@ class AdminTransformer extends TransformerAbstract {
             'id' => $user->id,
             'username' => $user->username,
             'email' => $user->email,
+            'phone' => $user->phone,
+            'roles' => $user->getRoleNames(),
             'is_locked' => $user->is_locked,
             'created_at' => $user->created_at,
             'updated_at' => $user->updated_at

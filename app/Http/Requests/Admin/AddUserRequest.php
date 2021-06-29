@@ -29,7 +29,7 @@ class AddUserRequest extends BaseRequest
             'password.min' => '密码应不少于6位',
             'password.max' => '密码应不大于16位',
             'password.confirmed' => '两次密码不一致',
-            'email.unique' => '邮箱已经被注册过了',
+            'email.unique' => '邮箱不能重复',
             'username.max' => '用户名不应超过16位'
         ];
     }
