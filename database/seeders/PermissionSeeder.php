@@ -50,7 +50,13 @@ class PermissionSeeder extends Seeder
             Permission::create($arr);
         }
         // 添加角色
-        $role = Role::create(['name' => 'super_admin', 'cn_name' => '超级管理员', 'guard_name' => 'admin']);
+        $role = Role::create([
+            'name' => 'super_admin',
+            'cn_name' => '超级管理员',
+            'guard_name' => 'admin',
+            'description' => '超级管理员拥有最高权限，是该系统的完全管理者',
+            'is_locked' => 1
+        ]);
         // 为角色添加权限
         $role->givePermissionTo(Permission::all());
     }

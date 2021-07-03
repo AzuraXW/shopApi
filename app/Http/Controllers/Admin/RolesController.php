@@ -89,7 +89,7 @@ class RolesController extends BaseController
         $name = $request->input('name');
         $cn_name = $request->input('cn_name');
         $description = $request->input('description');
-        $role->updated([
+        $role->update([
             'name' => $name,
             'cn_name' => $cn_name,
             'guard_name' => 'admin',

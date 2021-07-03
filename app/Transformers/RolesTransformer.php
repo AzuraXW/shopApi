@@ -13,6 +13,7 @@ class RolesTransformer extends TransformerAbstract {
             'name' => $role->name,
             'cn_name' => $role->cn_name,
             'description' => $role->description,
+            'is_locked' => $role->is_locked,
             'permission' => $role->permissions()->select('id', 'cn_name')->get()
         ];
     }

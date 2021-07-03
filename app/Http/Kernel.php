@@ -66,6 +66,7 @@ class Kernel extends HttpKernel
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'check.permission' => \App\Http\Middleware\CheckPermission::class,
         'check.admin' => \App\Http\Middleware\CheckAdmin::class,
-        'jwt.role' => \App\Http\Middleware\JWTRoleAuth::class
+        'jwt.role' => \App\Http\Middleware\JWTRoleAuth::class,
+        'checkavailablerole' =>  \App\Http\Middleware\CheckAvailableRole::class
     ];
 }

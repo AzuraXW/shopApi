@@ -40,7 +40,7 @@ class UserController extends BaseController
         $user->is_locked = $user->is_locked === 0 ? 1 : 0;
         $user->save();
         return $this->response->array([
-            'success' => 200,
+            'success' => true,
             'message' => '用户状态更新成功',
             'is_lock' => $user->is_locked
         ]);
@@ -97,10 +97,20 @@ class UserController extends BaseController
         $roleIds = $request->input('roleids');
         return $this->giveOrRemoveRole($roleIds, $user, false);
     }
+    // 更新用户的角色
+    public function updateRole (Request $request, Admin $user) {
+        // 删除全部角色
+        foreach ($user->getRoleNames()->toArray() as $role) {
+            $user->removeRole($role);
+        }
+        // 再分配对应的角色
+        $roleIds = $request->input('roleids');
+        return $this->giveOrRemoveRole($roleIds, $user, true);
+    }
 
     protected function giveOrRemoveRole ($roleIds, $user, $flag) {
         $isMatched = preg_match('/^\d+(,\d+)*$/', $roleIds);
-        if (!$isMatched) {
+        if (!$isMatched && $roleIds != '') {
             return $this->response->array([
                 'success' => false,
                 'message' => '角色ID不符合格式'
@@ -115,7 +125,7 @@ class UserController extends BaseController
             return $this->response->array([
                 'success' => true,
                 'message' => '成功分配角色',
-                'rolename' => $roleNames
+                'rolenames' => $roleNames
             ]);
         } else {
             // 移除角色
@@ -167,4 +177,21 @@ class UserController extends BaseController
         }
 
     }
+
+    // 删除用户
+    public function delete (Admin $user) {
+        $currentAdmin = auth('admin')->user();
+        if ($currentAdmin->id == $user->id) {
+            return $this->response->array([
+                'success' => false,
+                'message' => '不能删除自己'
+            ])->setStatusCode('401');
+        }
+        $user->delete();
+        return $this->response->array([
+            'success' => true,
+            'message' => '删除成功'
+        ]);
+    }
+
 }

@@ -29,11 +29,13 @@ $api->version('v1', function ($api) use($params) {
              */
             // 禁用用户
             $api->patch('users/{user}/lock', [\App\Http\Controllers\Admin\UserController::class, 'lock'])->name('users.lock');
+            $api->delete('users/{user}/delete', [\App\Http\Controllers\Admin\UserController::class, 'delete'])->name('users.delete');
             // 用户管理资源路由
             $api->resource('users', \App\Http\Controllers\Admin\UserController::class, [
                 'only' => ['index', 'show', 'store']
             ]);
             $api->post('users/{user}/role', [\App\Http\Controllers\Admin\UserController::class, 'giveRole'])->name('users.giveRole');
+            $api->post('users/{user}/role/update', [\App\Http\Controllers\Admin\UserController::class, 'updateRole'])->name('users.updateRole');
             $api->delete('users/{user}/role', [\App\Http\Controllers\Admin\UserController::class, 'removeRole'])->name('users.removeRole');
             $api->post('users/{user}/permission', [\App\Http\Controllers\Admin\UserController::class, 'givePermission'])->name('users.givePermission');
             $api->delete('users/{user}/permission', [\App\Http\Controllers\Admin\UserController::class, 'revokePermission'])->name('users.revokePermission');
@@ -77,7 +79,11 @@ $api->version('v1', function ($api) use($params) {
             ]);
             $api->patch('slides/{slide}/status', [\App\Http\Controllers\Admin\SlidesController::class, 'status'])->name('slides.status');
 
-            $api->get('menus', [\App\Http\Controllers\Admin\MenuController::class, 'index'])->name('menus.index');
+            // 后台菜单
+            $api->get('menus', [\App\Http\Controllers\Admin\MenuController::class, 'index']);
+            $api->get('menus/list', [\App\Http\Controllers\Admin\MenuController::class, 'list']);
+            $api->post('menus/{menu}/cache', [\App\Http\Controllers\Admin\MenuController::class, 'componentCache']);
+            $api->post('menus/{menu}/giveRole', [\App\Http\Controllers\Admin\MenuController::class, 'giveRole']);
 
             /**
             角色权限分配
@@ -90,11 +96,19 @@ $api->version('v1', function ($api) use($params) {
             $api->get('roles/list', [\App\Http\Controllers\Admin\RolesController::class, 'list'])->name('roles.list');
             // 添加角色
             $api->post('roles', [\App\Http\Controllers\Admin\RolesController::class, 'store'])->name('roles.store');
-            $api->post('roles/{role}/update', [\App\Http\Controllers\Admin\RolesController::class, 'update'])->name('roles.update');
-            $api->delete('roles/{role}/delete', [\App\Http\Controllers\Admin\RolesController::class, 'delete'])->name('roles.delete');
+            $api->post('roles/{role}/update', [\App\Http\Controllers\Admin\RolesController::class, 'update'])
+                ->middleware('checkavailablerole')
+                ->name('roles.update');
+            $api->delete('roles/{role}/delete', [\App\Http\Controllers\Admin\RolesController::class, 'delete'])
+                ->middleware('checkavailablerole')
+                ->name('roles.delete');
             // 为角色添加权限
-            $api->post('roles/{role}/permission', [\App\Http\Controllers\Admin\RolesController::class, 'addPermission'])->name('roles.addPermission');
-            $api->put('roles/{role}/permission', [\App\Http\Controllers\Admin\RolesController::class, 'updatePermission'])->name('roles.updatePermission');
+            $api->post('roles/{role}/permission', [\App\Http\Controllers\Admin\RolesController::class, 'addPermission'])
+                ->middleware('checkavailablerole')
+                ->name('roles.addPermission');
+            $api->put('roles/{role}/permission', [\App\Http\Controllers\Admin\RolesController::class, 'updatePermission'])
+                ->middleware('checkavailablerole')
+                ->name('roles.updatePermission');
         });
     });
 });

@@ -19,21 +19,37 @@ class AuthController extends BaseController
             ])->setStatusCode(401);
         }
 
+        if (auth('admin')->user()->is_locked === 1) {
+            return $this->response->array([
+                'success' => false,
+                'message' => '该用户已被禁用,请联系管理员'
+            ])->setStatusCode(403);
+        }
+
         return $this->respondWithToken($token);
     }
 
     public function me()
     {
         $user = auth('admin')->user();
+        if ($user->is_locked === 1) {
+            return $this->response->array([
+                'success' => false,
+                'message' => '该用户已被禁用,请联系管理员'
+            ])->setStatusCode(403);
+        }
         $roles = $user->getRoleNames();
-//        return auth('admin')->user()->getAllPermissions();
-        return $this->response->array(array_merge(
+        $response = array_merge(
             $user->toArray(),
             [
                 'roles' => $roles,
                 'code' => 20000
             ]
-        ));
+        );
+        if ($response['avatar_url'] == '') {
+            $response['avatar_url'] = 'https://placeimg.com/80/80/any';
+        }
+        return $this->response->array($response);
     }
 
     public function logout()
