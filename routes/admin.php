@@ -34,6 +34,7 @@ $api->version('v1', function ($api) use($params) {
             $api->resource('users', \App\Http\Controllers\Admin\UserController::class, [
                 'only' => ['index', 'show', 'store']
             ]);
+            $api->post('users/{user}/update_pwd', [\App\Http\Controllers\Auth\PasswordResetController::class, 'AdminUpdatePwdByEmail']);
             $api->post('users/{user}/role', [\App\Http\Controllers\Admin\UserController::class, 'giveRole'])->name('users.giveRole');
             $api->post('users/{user}/role/update', [\App\Http\Controllers\Admin\UserController::class, 'updateRole'])->name('users.updateRole');
             $api->delete('users/{user}/role', [\App\Http\Controllers\Admin\UserController::class, 'removeRole'])->name('users.removeRole');

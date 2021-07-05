@@ -10,4 +10,5 @@ class MenuRole extends Model
     use HasFactory;
     protected $table = 'menu_role';
     protected $fillable = ['mid', 'rid'];
+    public $timestamps = false;
 }

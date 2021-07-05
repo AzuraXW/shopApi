@@ -15,9 +15,20 @@ class CreateMenuRoleTable extends Migration
     {
         Schema::create('menu_role', function (Blueprint $table) {
             $table->id();
-            $table->tinyInteger('mid')->comment('菜单id');
-            $table->tinyInteger('rid')->comment('角色id');
-            $table->timestamps();
+            $table->unsignedBigInteger('mid')->comment('菜单id');
+            $table->unsignedBigInteger('rid')->comment('角色id');
+
+            $table->foreign('mid')
+                ->references('id')
+                ->on('menu')
+                ->onDelete('cascade');
+
+            $table->foreign('rid')
+                ->references('id')
+                ->on('roles')
+                ->onDelete('cascade');
+
+            $table->primary(['mid', 'rid'], 'menu_role_parimary');
         });
     }
 
