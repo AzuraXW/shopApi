@@ -19,12 +19,14 @@ class UserController extends BaseController
      */
     public function index(Request $request)
     {
+        $user = auth('admin')->user();
         $page = $request->query('page');
         $limit = $request->query('limit');
         $username = $request->query('username');
         $email = $request->query('email');
         // 分页查询
-        $paginate = Admin::when($username, function ($query) use($username) {
+        $paginate = Admin::where('id', '<>', $user->id)
+        ->when($username, function ($query) use($username) {
             return $query->where('username', 'like', "%$username%");
         })->when($email, function ($query) use($email) {
             return $query->where('email', 'like', "%$email%");
@@ -193,5 +195,4 @@ class UserController extends BaseController
             'message' => '删除成功'
         ]);
     }
-
 }

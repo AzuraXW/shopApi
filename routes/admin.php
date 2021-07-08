@@ -34,6 +34,10 @@ $api->version('v1', function ($api) use($params) {
             $api->resource('users', \App\Http\Controllers\Admin\UserController::class, [
                 'only' => ['index', 'show', 'store']
             ]);
+            // 更新用户头像
+            $api->post('users/{user}/avatar', [\App\Http\Controllers\Admin\AuthController::class, 'updateAvatar']);
+            // 更新用户个人信息
+            $api->post('users/{user}/profile', [\App\Http\Controllers\Admin\AuthController::class, 'updateProfile']);
             $api->post('users/{user}/update_pwd', [\App\Http\Controllers\Auth\PasswordResetController::class, 'AdminUpdatePwdByEmail']);
             $api->post('users/{user}/role', [\App\Http\Controllers\Admin\UserController::class, 'giveRole'])->name('users.giveRole');
             $api->post('users/{user}/role/update', [\App\Http\Controllers\Admin\UserController::class, 'updateRole'])->name('users.updateRole');
