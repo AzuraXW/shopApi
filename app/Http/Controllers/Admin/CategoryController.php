@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\BaseController;
-use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -16,13 +15,13 @@ class CategoryController extends BaseController
      */
     public function index(Request $request)
     {
-        $type = $request->query('type');
-        if ($type === 'all') {
-            $category = cache_category_all();
-        } else {
-            $category = cache_category();
-        }
-
+//        $type = $request->query('type');
+//        if ($type === 'all') {
+//            $category = cache_category_all();
+//        } else {
+//            $category = cache_category();
+//        }
+        $category = categoryTree();
         return $this->response->array([
             'success' => true,
             'message' => '成功获取分类列表',
@@ -135,5 +134,41 @@ class CategoryController extends BaseController
             'level' => $level,
             'group' => $group
         ];
+    }
+
+    // 为三级分类添加品牌
+    public function addBrand (Request $request, Category $category) {
+        if ($category->level !== 3) {
+            return $this->response->array([
+                'success' => false,
+                'message' => '只能为三级分类添加品牌'
+            ])->setStatusCode(400);
+        }
+        $brand_ids = $request->input('brand_ids');
+        $brand_ids = explode(',', $brand_ids);
+        $category->brand()->attach($brand_ids);
+
+        return $this->response->array([
+            'success' => true,
+            'message' => '添加成功'
+        ]);
+    }
+
+    // 删除三级分类下的品牌
+    public function deleteBrand (Request $request, Category $category) {
+        if ($category->level !== 3) {
+            return $this->response->array([
+                'success' => false,
+                'message' => '只能删除三级分类下的品牌'
+            ])->setStatusCode(400);
+        }
+        $brand_ids = $request->input('brand_ids');
+        $brand_ids = explode(',', $brand_ids);
+        $category->brand()->detach($brand_ids);
+
+        return $this->response->array([
+            'success' => true,
+            'message' => '删除成功'
+        ]);
     }
 }

@@ -24,7 +24,7 @@ class JWTRoleAuth extends BaseMiddleware
             // 解析token角色
             $tokenRole = $this->auth->parseToken()->getClaim('role');
         } catch (JWTException $e) {
-            return $next($request);
+            throw new UnauthorizedHttpException('jwt-auth', '用户未认证错误');
         }
 
         if ($tokenRole != $role) {

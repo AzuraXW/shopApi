@@ -8,7 +8,7 @@ if (!function_exists('categoryTree')) {
             })
             ->where('pid', 0)
             ->with([
-                'children.children' => function ($query) use ($status) {
+                'children.children.brand' => function ($query) use ($status) {
                     return $query->when($status !== false, function ($query) use ($status) {
                         return $query->where('status', $status);
                     });

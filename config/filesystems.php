@@ -49,6 +49,13 @@ return [
             'visibility' => 'avatars'
         ],
 
+        'brand' => [
+            'driver' => 'local',
+            'root' => storage_path('app/brand'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'brand'
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -95,7 +102,8 @@ return [
 
     'links' => [
         public_path('storage') => storage_path('app/public'),
-        public_path('avatars') => storage_path('app/avatars')
+        public_path('avatars') => storage_path('app/avatars'),
+        public_path('brand') => storage_path('app/brand')
     ],
 
 ];
