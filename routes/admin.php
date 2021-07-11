@@ -53,7 +53,10 @@ $api->version('v1', function ($api) use($params) {
             $api->resource('category', \App\Http\Controllers\Admin\CategoryController::class, [
                 'except' => ['destroy']
             ]);
-
+            // 为分类添加品牌
+            $api->post('category/{category}/brand', [\App\Http\Controllers\Admin\CategoryController::class, 'addBrand']);
+            // 删除分类下的品牌
+            $api->post('category/{category}/delBrand', [\App\Http\Controllers\Admin\CategoryController::class, 'deleteBrand']);
             /**
             商品管理
              */
@@ -114,6 +117,39 @@ $api->version('v1', function ($api) use($params) {
             $api->put('roles/{role}/permission', [\App\Http\Controllers\Admin\RolesController::class, 'updatePermission'])
                 ->middleware('checkavailablerole')
                 ->name('roles.updatePermission');
+
+            /* 商品规格组和规格key */
+            // 添加商品规格组
+            $api->post('specGroup', [\App\Http\Controllers\Admin\SpecController::class, 'addSpecGroup']);
+            // 删除商品规格组
+            $api->delete('specGroup/{specGroup}', [\App\Http\Controllers\Admin\SpecController::class, 'deleteSpecGroup']);
+            // 更新商品规格组
+            $api->post('specGroup/{specGroup}/update', [\App\Http\Controllers\Admin\SpecController::class, 'updateSpecGorup']);
+            // 添加规格组参数
+            $api->post('specParam', [\App\Http\Controllers\Admin\SpecController::class, 'addSpecParams']);
+            // 更新规格组参数
+            $api->post('specParam/{specParam}/update', [\App\Http\Controllers\Admin\SpecController::class, 'updateSpecParam']);
+            // 删除规格组参数
+            $api->delete('specParam/{specParam}', [\App\Http\Controllers\Admin\SpecController::class, 'deleteSpecParam']);
+            // 品牌列表
+            $api->get('brand/list', [\App\Http\Controllers\Admin\BrandController::class, 'brandList']);
+            // 添加品牌
+            $api->post('brand', [\App\Http\Controllers\Admin\BrandController::class, 'addBrand']);
+            // 删除品牌
+            $api->delete('brand/{brand}', [\App\Http\Controllers\Admin\BrandController::class, 'deleteBrand']);
+            // 更新品牌
+            $api->post('brand/{brand}/update', [\App\Http\Controllers\Admin\BrandController::class, 'updateBrand']);
+
+            // 商品集
+            // 添加商品集
+            $api->post('spu', [\App\Http\Controllers\Admin\SpuController::class, 'addSpu']);
+            // 商品集列表
+            $api->get('spu/list', [\App\Http\Controllers\Admin\SpuController::class, 'spuList']);
+
+            // 商品SKU
+            $api->post('sku', [\App\Http\Controllers\Admin\SkuController::class, 'addSku']);
+            // 根据spu_id查询商品
+            $api->get('sku', [\App\Http\Controllers\Admin\SkuController::class, 'querySku']);
         });
     });
 });

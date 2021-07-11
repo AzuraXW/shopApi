@@ -17,4 +17,9 @@ class Category extends Model
     public function children () {
         return $this->hasMany(Category::class, 'pid', 'id');
     }
+
+    public function brand () {
+        return $this->belongsToMany(Brand::class, CateogryBrand::class, 'category_id', 'brand_id');
+    }
+
 }
